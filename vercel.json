@@ -1,9 +1,6 @@
 {
   "version": 2,
-  "public": true,
   "cleanUrls": true,
-  "framework": null,
-  "buildCommand": null,
   "outputDirectory": ".",
   "headers": [
     {
@@ -16,18 +13,8 @@
         {
           "key": "X-Frame-Options",
           "value": "DENY"
-        },
-        {
-          "key": "X-XSS-Protection",
-          "value": "1; mode=block"
         }
       ]
-    }
-  ],
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
     }
   ]
 }
