@@ -1,0 +1,22 @@
+{
+  "name": "campusconnect-landing",
+  "version": "1.0.0",
+  "description": "Modern, responsive landing page for CampusConnect - the all-in-one platform for college students",
+  "main": "index.html",
+  "scripts": {
+    "build": "echo 'Static build ready'",
+    "start": "python serve.py 3000",
+    "serve": "python serve.py 3000"
+  },
+  "keywords": [
+    "campusconnect",
+    "student-platform",
+    "college",
+    "landing-page",
+    "react",
+    "tailwindcss",
+    "vercel"
+  ],
+  "author": "CampusConnect Team",
+  "license": "MIT"
+}

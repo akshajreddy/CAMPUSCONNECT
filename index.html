@@ -1,0 +1,1998 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CampusConnect – Everything Campus, All in One Place</title>
+  <meta name="description" content="The all-in-one platform for college students. Discover events, connect with clubs, buy and sell, find lost items, and meet roommates or project teammates.">
+
+  <!-- Favicon SVG -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%232563eb'/%3E%3Cstop offset='100%25' stop-color='%237c3aed'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='8' fill='url(%23g)'/%3E%3Cpath d='M16 6L6 12L16 18L26 12L16 6Z' stroke='white' stroke-width='2' fill='none' stroke-linejoin='round'/%3E%3Cpath d='M10 14.5V21C10 23.5 16 26 16 26C16 26 22 23.5 22 21V14.5' stroke='white' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='16' cy='18' r='2' fill='%2367e8f9'/%3E%3C/svg%3E">
+
+  <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS Play CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              200: '#bfdbfe',
+              300: '#93c5fd',
+              400: '#60a5fa',
+              500: '#3b82f6',
+              600: '#2563eb', // primary blue
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a',
+              950: '#172554',
+            },
+            accent: {
+              50: '#faf5ff',
+              100: '#f3e8ff',
+              200: '#e9d5ff',
+              300: '#d8b4fe',
+              400: '#c084fc',
+              500: '#a855f7',
+              600: '#9333ea',
+              700: '#7e22ce', // subtle purple accent
+              800: '#6b21a8',
+              900: '#581c87',
+            },
+            navy: {
+              800: '#1e293b',
+              900: '#0f172a',
+              950: '#090d16',
+            }
+          },
+          boxShadow: {
+            'glow-blue': '0 0 35px -5px rgba(37, 99, 235, 0.25)',
+            'glow-purple': '0 0 35px -5px rgba(124, 58, 237, 0.2)',
+            'glass': '0 8px 32px 0 rgba(15, 23, 42, 0.08)',
+          },
+          animation: {
+            'float-slow': 'float 6s ease-in-out infinite',
+            'float-delayed': 'float 7s ease-in-out 2s infinite',
+            'pulse-subtle': 'pulseSubtle 3s ease-in-out infinite',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-10px)' },
+            },
+            pulseSubtle: {
+              '0%, 100%': { opacity: '1' },
+              '50%': { opacity: '0.6' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- React 18, ReactDOM 18 and Babel Standalone for Seamless Browser Rendering -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    /* Custom scrollbar and backdrop utilities */
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 5px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+
+    .mesh-gradient {
+      background-color: #ffffff;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.08) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(124, 58, 237, 0.09) 0px, transparent 50%),
+        radial-gradient(at 50% 50%, rgba(59, 130, 246, 0.04) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(219, 234, 254, 0.5) 0px, transparent 50%);
+    }
+
+    .dark-mesh-gradient {
+      background-color: #0b1120;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.25) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(124, 58, 237, 0.2) 0px, transparent 50%),
+        radial-gradient(at 50% 100%, rgba(30, 58, 138, 0.3) 0px, transparent 50%);
+    }
+
+    .glass-card {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(226, 232, 240, 0.8);
+    }
+    
+    .glass-card-hover {
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .glass-card-hover:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 30px -10px rgba(37, 99, 235, 0.12), 0 0 1px 1px rgba(37, 99, 235, 0.1);
+      border-color: rgba(147, 197, 253, 0.8);
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased selection:bg-brand-600 selection:text-white">
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect, useRef, useMemo } = React;
+
+    // --- ICON SYSTEM (High-performance, Zero-dependency SVG Icons) ---
+    const Icons = {
+      Logo: ({ className = "w-8 h-8" }) => (
+        <svg className={className} viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#2563eb" />
+              <stop offset="50%" stopColor="#3b82f6" />
+              <stop offset="100%" stopColor="#7c3aed" />
+            </linearGradient>
+            <linearGradient id="node-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#60a5fa" />
+              <stop offset="100%" stopColor="#c084fc" />
+            </linearGradient>
+          </defs>
+          <rect width="36" height="36" rx="10" fill="url(#logo-grad)" />
+          {/* Mortarboard Academic Cap */}
+          <path d="M18 7L6 14L18 21L30 14L18 7Z" fill="white" fillOpacity="0.95" />
+          <path d="M11 17V24.5C11 25.5 14.5 28 18 28C21.5 28 25 25.5 25 24.5V17" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+          {/* Tassel node & network spark */}
+          <path d="M28 15V22" stroke="#c084fc" strokeWidth="2" strokeLinecap="round" />
+          <circle cx="28" cy="22.5" r="1.5" fill="#f3e8ff" />
+          <circle cx="18" cy="21" r="2.5" fill="url(#node-grad)" stroke="white" strokeWidth="1.2" />
+        </svg>
+      ),
+      Check: ({ className = "w-5 h-5 text-emerald-500" }) => (
+        <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7" />
+        </svg>
+      ),
+      ArrowRight: ({ className = "w-5 h-5" }) => (
+        <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+        </svg>
+      ),
+      Sparkles: ({ className = "w-5 h-5 text-accent-500" }) => (
+        <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+        </svg>
+      ),
+      ShoppingBag: ({ className = "w-6 h-6" }) => (
+        <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+        </svg>
+      ),
+      SearchAlert: ({ className = "w-6 h-6" }) => (
+        <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 3h.01" />
+        </svg>
+      ),
+      Calendar: ({ className = "w-6 h-6" }) => (
+        <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+      ),
+      Users: ({ className = "w-6 h-6" }) => (
+        <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+        </svg>
+      ),
+      UserPlus: ({ className = "w-6 h-6" }) => (
+        <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+        </svg>
+      ),
+      ShieldCheck: ({ className = "w-6 h-6" }) => (
+        <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+        </svg>
+      ),
+      Clock: ({ className = "w-6 h-6" }) => (
+        <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      ),
+      BellOff: ({ className = "w-6 h-6" }) => (
+        <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+        </svg>
+      ),
+      Layers: ({ className = "w-6 h-6" }) => (
+        <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+        </svg>
+      ),
+      Compass: ({ className = "w-6 h-6" }) => (
+        <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 2a10 10 0 100 20 10 10 0 000-20zm0 18a8 8 0 110-16 8 8 0 010 16zm-1.5-6.5l4-1.5-1.5 4-4 1.5 1.5-4z" />
+        </svg>
+      ),
+      AlertTriangle: ({ className = "w-6 h-6 text-amber-500" }) => (
+        <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+        </svg>
+      ),
+      MessageSquareX: ({ className = "w-6 h-6" }) => (
+        <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+        </svg>
+      ),
+      Close: ({ className = "w-6 h-6" }) => (
+        <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      ),
+      Menu: ({ className = "w-6 h-6" }) => (
+        <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      ),
+      Mail: ({ className = "w-5 h-5" }) => (
+        <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+        </svg>
+      ),
+      MapPin: ({ className = "w-4 h-4" }) => (
+        <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+      ),
+      ExternalLink: ({ className = "w-4 h-4" }) => (
+        <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+        </svg>
+      ),
+      Copy: ({ className = "w-4 h-4" }) => (
+        <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+        </svg>
+      ),
+      GraduationCap: ({ className = "w-6 h-6" }) => (
+        <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 14l9-5-9-5-9 5 9 5z" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0112 20.055a11.952 11.952 0 01-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+        </svg>
+      ),
+      Heart: ({ className = "w-4 h-4" }) => (
+        <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+        </svg>
+      ),
+      Tag: ({ className = "w-4 h-4" }) => (
+        <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+        </svg>
+      )
+    };
+
+    // --- TOAST NOTIFICATION COMPONENT ---
+    const Toast = ({ message, type = "info", onClose }) => {
+      useEffect(() => {
+        const timer = setTimeout(() => {
+          onClose();
+        }, 4000);
+        return () => clearTimeout(timer);
+      }, [onClose]);
+
+      return (
+        <div className="fixed bottom-6 right-6 z-50 flex items-center space-x-3 bg-navy-900 text-white px-5 py-3.5 rounded-xl shadow-2xl border border-slate-700 animate-bounce duration-500">
+          <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></div>
+          <span className="text-sm font-medium">{message}</span>
+          <button onClick={onClose} className="text-slate-400 hover:text-white ml-2">
+            <Icons.Close className="w-4 h-4" />
+          </button>
+        </div>
+      );
+    };
+
+    // --- NAVIGATION COMPONENT ---
+    const Navbar = ({ onOpenGetStarted, onNavigate }) => {
+      const [isScrolled, setIsScrolled] = useState(false);
+      const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+      useEffect(() => {
+        const handleScroll = () => {
+          if (window.scrollY > 20) {
+            setIsScrolled(true);
+          } else {
+            setIsScrolled(false);
+          }
+        };
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+      }, []);
+
+      const navItems = [
+        { label: "Home", href: "#hero" },
+        { label: "The Problem", href: "#problem" },
+        { label: "Features", href: "#features" },
+        { label: "Why CampusConnect", href: "#why-us" },
+        { label: "How It Works", href: "#how-it-works" }
+      ];
+
+      return (
+        <header className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
+          isScrolled 
+            ? "bg-white/90 backdrop-blur-md shadow-sm border-b border-slate-200/80 py-3" 
+            : "bg-transparent py-5"
+        }`}>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between">
+              
+              {/* Brand Logo */}
+              <a href="#hero" className="flex items-center space-x-3 group cursor-pointer">
+                <Icons.Logo className="w-9 h-9 transition-transform group-hover:scale-105" />
+                <div className="flex flex-col">
+                  <div className="flex items-center space-x-1.5">
+                    <span className="text-xl font-extrabold tracking-tight text-slate-900 font-sans">
+                      Campus<span className="text-brand-600">Connect</span>
+                    </span>
+                    <span className="hidden sm:inline-block text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-accent-100 text-accent-700 border border-accent-200">
+                      Prototype
+                    </span>
+                  </div>
+                  <span className="text-[10px] font-medium text-slate-500 tracking-wide hidden sm:block">
+                    All-in-One Campus Network
+                  </span>
+                </div>
+              </a>
+
+              {/* Desktop Navigation Links */}
+              <nav className="hidden md:flex items-center space-x-1 lg:space-x-2">
+                {navItems.map((item) => (
+                  <a
+                    key={item.label}
+                    href={item.href}
+                    className="px-3.5 py-2 text-sm font-semibold text-slate-600 hover:text-brand-600 hover:bg-brand-50/60 rounded-lg transition-colors"
+                  >
+                    {item.label}
+                  </a>
+                ))}
+              </nav>
+
+              {/* CTA Buttons */}
+              <div className="hidden sm:flex items-center space-x-3">
+                <a
+                  href="#features"
+                  className="px-4 py-2 text-sm font-semibold text-slate-700 hover:text-brand-600 transition-colors"
+                >
+                  Explore Features
+                </a>
+                <button
+                  onClick={() => onOpenGetStarted('student')}
+                  className="relative group overflow-hidden px-5 py-2.5 rounded-xl bg-gradient-to-r from-brand-600 via-brand-700 to-accent-700 text-white text-sm font-semibold shadow-md shadow-brand-500/20 hover:shadow-lg hover:shadow-brand-500/30 transition-all active:scale-95"
+                >
+                  <span className="relative z-10 flex items-center space-x-1.5">
+                    <span>Get Started</span>
+                    <Icons.ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                  </span>
+                </button>
+              </div>
+
+              {/* Mobile Menu Button */}
+              <div className="md:hidden flex items-center space-x-2">
+                <button
+                  onClick={() => onOpenGetStarted('student')}
+                  className="px-3 py-1.5 rounded-lg bg-brand-600 text-white text-xs font-semibold"
+                >
+                  Get Started
+                </button>
+                <button
+                  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                  className="p-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 focus:outline-none"
+                  aria-label="Toggle navigation menu"
+                >
+                  {mobileMenuOpen ? <Icons.Close className="w-6 h-6" /> : <Icons.Menu className="w-6 h-6" />}
+                </button>
+              </div>
+
+            </div>
+          </div>
+
+          {/* Mobile Drawer */}
+          {mobileMenuOpen && (
+            <div className="md:hidden bg-white/98 backdrop-blur-xl border-b border-slate-200 px-4 pt-3 pb-6 shadow-xl animate-in slide-in-from-top-2 duration-200">
+              <div className="flex flex-col space-y-2">
+                {navItems.map((item) => (
+                  <a
+                    key={item.label}
+                    href={item.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="px-4 py-2.5 rounded-lg text-base font-semibold text-slate-700 hover:bg-brand-50 hover:text-brand-600"
+                  >
+                    {item.label}
+                  </a>
+                ))}
+                <div className="pt-3 border-t border-slate-100 flex flex-col space-y-2">
+                  <a
+                    href="#features"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="w-full text-center py-2.5 text-sm font-semibold text-slate-700 border border-slate-200 rounded-xl"
+                  >
+                    Explore Features
+                  </a>
+                  <button
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      onOpenGetStarted('student');
+                    }}
+                    className="w-full py-2.5 rounded-xl bg-brand-600 text-white text-sm font-semibold shadow-md text-center"
+                  >
+                    Get Started (Early Access)
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </header>
+      );
+    };
+
+    // --- HERO SECTION ---
+    const HeroSection = ({ onOpenGetStarted, onOpenFeaturePreview }) => {
+      // Mockup active tab state
+      const [mockupTab, setMockupTab] = useState('events');
+
+      return (
+        <section id="hero" className="relative pt-32 pb-20 md:pt-40 md:pb-28 mesh-gradient overflow-hidden">
+          {/* Subtle Ambient Background Orbs */}
+          <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[450px] bg-gradient-to-tr from-brand-300/30 via-accent-200/20 to-transparent blur-3xl pointer-events-none rounded-full"></div>
+          <div className="absolute top-20 right-10 w-72 h-72 bg-accent-400/10 blur-3xl rounded-full pointer-events-none"></div>
+
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+              
+              {/* Left Column: Headline and Call-to-Actions */}
+              <div className="lg:col-span-7 text-center lg:text-left space-y-6">
+                
+                {/* Startup Status Badge */}
+                <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-brand-50 border border-brand-200/80 shadow-xs">
+                  <span className="flex h-2 w-2 rounded-full bg-brand-600 animate-ping"></span>
+                  <span className="text-xs font-bold text-brand-700 tracking-wide uppercase">
+                    CampusConnect • Prototype Concept
+                  </span>
+                  <span className="text-slate-300">•</span>
+                  <span className="text-xs font-semibold text-slate-600 flex items-center space-x-1">
+                    <span>Exclusively for College Students</span>
+                  </span>
+                </div>
+
+                {/* Main Headline */}
+                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-[1.15]">
+                  Everything Campus,{' '}
+                  <span className="bg-gradient-to-r from-brand-600 via-brand-700 to-accent-600 bg-clip-text text-transparent">
+                    All in One Place.
+                  </span>
+                </h1>
+
+                {/* Supporting Text */}
+                <p className="text-lg sm:text-xl text-slate-600 font-normal leading-relaxed max-w-2xl mx-auto lg:mx-0">
+                  Discover events, connect with clubs, buy and sell, find lost items, and meet your future roommates or project teammates – all through one platform.
+                </p>
+
+                {/* Two Primary CTAs */}
+                <div className="pt-2 flex flex-col sm:flex-row items-center justify-center lg:justify-start space-y-3 sm:space-y-0 sm:space-x-4">
+                  <button
+                    onClick={() => onOpenGetStarted('student')}
+                    className="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-brand-600 to-accent-700 hover:from-brand-700 hover:to-accent-800 text-white font-bold text-base shadow-xl shadow-brand-500/25 hover:shadow-brand-500/35 transition-all transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center space-x-2.5"
+                  >
+                    <span>Get Started</span>
+                    <Icons.ArrowRight className="w-5 h-5" />
+                  </button>
+
+                  <a
+                    href="#features"
+                    className="w-full sm:w-auto px-7 py-4 rounded-xl bg-white hover:bg-slate-50 text-slate-700 hover:text-brand-600 font-bold text-base border border-slate-200/90 shadow-sm hover:border-brand-200 transition-all flex items-center justify-center space-x-2"
+                  >
+                    <span>Explore Features</span>
+                    <span className="text-xs px-2 py-0.5 rounded bg-brand-100 text-brand-700 font-bold">5 Modules</span>
+                  </a>
+                </div>
+
+                {/* Trust & Campus Value Indicators */}
+                <div className="pt-4 border-t border-slate-200/70 grid grid-cols-3 gap-4 text-left max-w-lg mx-auto lg:mx-0">
+                  <div>
+                    <div className="text-xs font-bold text-slate-900 flex items-center space-x-1">
+                      <Icons.Check className="w-4 h-4 text-brand-600 shrink-0" />
+                      <span>Zero Spam Groups</span>
+                    </div>
+                    <p className="text-[11px] text-slate-500 mt-0.5">Goodbye 50+ messy chats</p>
+                  </div>
+                  <div>
+                    <div className="text-xs font-bold text-slate-900 flex items-center space-x-1">
+                      <Icons.Check className="w-4 h-4 text-brand-600 shrink-0" />
+                      <span>Verified .edu</span>
+                    </div>
+                    <p className="text-[11px] text-slate-500 mt-0.5">Real students only</p>
+                  </div>
+                  <div>
+                    <div className="text-xs font-bold text-slate-900 flex items-center space-x-1">
+                      <Icons.Check className="w-4 h-4 text-brand-600 shrink-0" />
+                      <span>1 Single Hub</span>
+                    </div>
+                    <p className="text-[11px] text-slate-500 mt-0.5">Everything organized</p>
+                  </div>
+                </div>
+
+              </div>
+
+              {/* Right Column: Realistic Interactive App Mockup Visual */}
+              <div className="lg:col-span-5 relative flex justify-center">
+                
+                {/* Floating Highlights Badges */}
+                <div className="absolute -top-6 -left-6 z-20 hidden sm:flex items-center space-x-3 bg-white/95 backdrop-blur-md p-3 rounded-2xl shadow-xl border border-slate-100 animate-float-slow">
+                  <div className="w-10 h-10 rounded-xl bg-accent-100 text-accent-700 flex items-center justify-center">
+                    <Icons.Users className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-slate-900">18 Campus Clubs</p>
+                    <p className="text-[11px] text-emerald-600 font-medium">Recruiting & Live Today</p>
+                  </div>
+                </div>
+
+                <div className="absolute -bottom-6 -right-4 z-20 hidden sm:flex items-center space-x-3 bg-white/95 backdrop-blur-md p-3 rounded-2xl shadow-xl border border-slate-100 animate-float-delayed">
+                  <div className="w-10 h-10 rounded-xl bg-brand-100 text-brand-700 flex items-center justify-center">
+                    <Icons.ShoppingBag className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-slate-900">Direct Campus Exchange</p>
+                    <p className="text-[11px] text-brand-600 font-medium">No fees • Safe dorm pickups</p>
+                  </div>
+                </div>
+
+                {/* Smartphone Device Frame Container */}
+                <div className="w-full max-w-[340px] sm:max-w-[360px] bg-slate-900 p-3 sm:p-3.5 rounded-[42px] shadow-2xl shadow-slate-900/30 border-4 border-slate-800 relative">
+                  
+                  {/* Phone Notch & Speaker */}
+                  <div className="absolute top-5 left-1/2 -translate-x-1/2 w-28 h-5 bg-slate-900 rounded-full z-30 flex items-center justify-center">
+                    <div className="w-12 h-1 bg-slate-700 rounded-full"></div>
+                    <div className="w-2.5 h-2.5 bg-slate-800 rounded-full ml-2 border border-slate-700"></div>
+                  </div>
+
+                  {/* Inside Screen Content */}
+                  <div className="bg-slate-50 rounded-[34px] overflow-hidden border border-slate-200 text-slate-800 text-left pt-6 pb-4">
+                    
+                    {/* App Header */}
+                    <div className="px-4 py-3 bg-white border-b border-slate-100 flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        <Icons.Logo className="w-6 h-6" />
+                        <span className="font-extrabold text-sm text-slate-900">CampusConnect</span>
+                      </div>
+                      <div className="flex items-center space-x-1.5 px-2 py-0.5 rounded-full bg-slate-100 text-[10px] font-semibold text-slate-600">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                        <span>Univ Campus</span>
+                      </div>
+                    </div>
+
+                    {/* Quick Filter Switcher Inside Phone */}
+                    <div className="px-3 py-2 bg-white flex space-x-1 overflow-x-auto border-b border-slate-100">
+                      {[
+                        { id: 'events', label: 'Events' },
+                        { id: 'market', label: 'Buy/Sell' },
+                        { id: 'lost', label: 'Lost & Found' },
+                        { id: 'clubs', label: 'Clubs' },
+                        { id: 'roommates', label: 'Roommates' }
+                      ].map(t => (
+                        <button
+                          key={t.id}
+                          onClick={() => setMockupTab(t.id)}
+                          className={`text-[11px] font-bold px-2.5 py-1 rounded-full whitespace-nowrap transition-colors ${
+                            mockupTab === t.id 
+                              ? 'bg-brand-600 text-white shadow-xs' 
+                              : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                          }`}
+                        >
+                          {t.label}
+                        </button>
+                      ))}
+                    </div>
+
+                    {/* Feed Content based on Selected Tab */}
+                    <div className="p-3 space-y-2.5 min-h-[300px]">
+                      
+                      {mockupTab === 'events' && (
+                        <div className="space-y-2 animate-in fade-in duration-300">
+                          <div className="bg-white p-3 rounded-xl border border-slate-200/90 shadow-xs hover:border-brand-300 transition-colors">
+                            <div className="flex items-start justify-between">
+                              <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-brand-50 text-brand-700">
+                                Hackathon
+                              </span>
+                              <span className="text-[11px] font-semibold text-slate-400">Today, 5 PM</span>
+                            </div>
+                            <h4 className="font-bold text-xs text-slate-900 mt-1">HackCampus 2026</h4>
+                            <p className="text-[11px] text-slate-500">Auditorium B • 120 students registered</p>
+                            <div className="mt-2.5 flex items-center justify-between pt-2 border-t border-slate-100">
+                              <span className="text-[11px] font-medium text-brand-600">Free Food & Swag</span>
+                              <span className="text-[11px] font-bold px-2 py-1 rounded bg-brand-600 text-white">RSVP</span>
+                            </div>
+                          </div>
+
+                          <div className="bg-white p-3 rounded-xl border border-slate-200/90 shadow-xs">
+                            <div className="flex items-start justify-between">
+                              <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-purple-50 text-purple-700">
+                                Cultural Fest
+                              </span>
+                              <span className="text-[11px] font-semibold text-slate-400">Fri, Nov 14</span>
+                            </div>
+                            <h4 className="font-bold text-xs text-slate-900 mt-1">Acoustic Night & Open Mic</h4>
+                            <p className="text-[11px] text-slate-500">Student Amphitheatre</p>
+                          </div>
+                        </div>
+                      )}
+
+                      {mockupTab === 'market' && (
+                        <div className="space-y-2 animate-in fade-in duration-300">
+                          <div className="bg-white p-3 rounded-xl border border-slate-200/90 shadow-xs">
+                            <div className="flex items-center justify-between">
+                              <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-50 text-emerald-700">Verified Seller</span>
+                              <span className="text-xs font-bold text-brand-600">$45</span>
+                            </div>
+                            <h4 className="font-bold text-xs text-slate-900 mt-1">TI-84 Plus CE Graphing Calculator</h4>
+                            <p className="text-[11px] text-slate-500">Engineering Dorm 3 • Like new condition</p>
+                            <button className="w-full mt-2 py-1 rounded bg-slate-900 text-white text-[11px] font-bold">Chat with Student</button>
+                          </div>
+
+                          <div className="bg-white p-3 rounded-xl border border-slate-200/90 shadow-xs">
+                            <div className="flex items-center justify-between">
+                              <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-700">Textbook</span>
+                              <span className="text-xs font-bold text-brand-600">$20</span>
+                            </div>
+                            <h4 className="font-bold text-xs text-slate-900 mt-1">Stewart Calculus (8th Edition)</h4>
+                            <p className="text-[11px] text-slate-500">No markings • Pickup at Central Library</p>
+                          </div>
+                        </div>
+                      )}
+
+                      {mockupTab === 'lost' && (
+                        <div className="space-y-2 animate-in fade-in duration-300">
+                          <div className="bg-white p-3 rounded-xl border border-amber-200 shadow-xs bg-amber-50/30">
+                            <div className="flex items-center justify-between">
+                              <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-red-100 text-red-700">LOST ITEM</span>
+                              <span className="text-[10px] font-medium text-slate-400">20 mins ago</span>
+                            </div>
+                            <h4 className="font-bold text-xs text-slate-900 mt-1">Sony WH-1000XM4 Headphones</h4>
+                            <p className="text-[11px] text-slate-600">Left in Science Complex Room 204. Black carrying case.</p>
+                            <div className="mt-2 flex space-x-2">
+                              <span className="text-[10px] font-bold text-brand-700 bg-brand-50 px-2 py-0.5 rounded">I found this</span>
+                            </div>
+                          </div>
+
+                          <div className="bg-white p-3 rounded-xl border border-emerald-200 shadow-xs bg-emerald-50/30">
+                            <div className="flex items-center justify-between">
+                              <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">FOUND & SECURED</span>
+                              <span className="text-[10px] font-medium text-slate-400">1 hr ago</span>
+                            </div>
+                            <h4 className="font-bold text-xs text-slate-900 mt-1">Student ID Card (Alex R.)</h4>
+                            <p className="text-[11px] text-slate-600">Deposited with Library Front Desk officer.</p>
+                          </div>
+                        </div>
+                      )}
+
+                      {mockupTab === 'clubs' && (
+                        <div className="space-y-2 animate-in fade-in duration-300">
+                          <div className="bg-white p-3 rounded-xl border border-slate-200/90 shadow-xs">
+                            <div className="flex items-center justify-between">
+                              <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-purple-100 text-purple-700">Robotics & AI</span>
+                              <span className="text-[10px] font-bold text-emerald-600">Open Recruits</span>
+                            </div>
+                            <h4 className="font-bold text-xs text-slate-900 mt-1">Autonomous Drone Project Team</h4>
+                            <p className="text-[11px] text-slate-500">Welcoming coders, CAD designers & builders.</p>
+                            <span className="inline-block mt-2 text-[10px] font-bold text-brand-600">View Application Form →</span>
+                          </div>
+                        </div>
+                      )}
+
+                      {mockupTab === 'roommates' && (
+                        <div className="space-y-2 animate-in fade-in duration-300">
+                          <div className="bg-white p-3 rounded-xl border border-slate-200/90 shadow-xs">
+                            <div className="flex items-center justify-between">
+                              <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-brand-50 text-brand-700">Fall 2026 Flatmate</span>
+                              <span className="text-[10px] font-bold text-slate-500">95% Match</span>
+                            </div>
+                            <h4 className="font-bold text-xs text-slate-900 mt-1">2BHK Near North Campus Gate</h4>
+                            <p className="text-[11px] text-slate-500">Non-smoker, early riser, CS Junior major. $550/mo.</p>
+                            <div className="mt-2 flex space-x-1">
+                              <span className="text-[9px] px-1.5 py-0.5 bg-slate-100 rounded text-slate-600">Quiet Study</span>
+                              <span className="text-[9px] px-1.5 py-0.5 bg-slate-100 rounded text-slate-600">Furnished</span>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                    </div>
+
+                    {/* Bottom Phone Bar */}
+                    <div className="px-4 py-2 bg-white border-t border-slate-100 flex justify-around text-slate-400 text-xs">
+                      <span className="text-brand-600 font-bold flex flex-col items-center">
+                        <span className="w-1.5 h-1.5 rounded-full bg-brand-600 mb-0.5"></span>
+                        Hub
+                      </span>
+                      <span>Announcements</span>
+                      <span>Search</span>
+                      <span>Profile</span>
+                    </div>
+
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+        </section>
+      );
+    };
+
+    // --- SECTION 2: THE PROBLEM ---
+    const ProblemSection = () => {
+      const problems = [
+        {
+          icon: Icons.MessageSquareX,
+          color: "from-rose-500/10 to-red-500/20 text-rose-600 border-rose-200",
+          title: "Announcements Buried in WhatsApp Groups",
+          description: "Crucial exam notifications, room changes, and campus circulars vanish under hundreds of memes, spam, and irrelevant chatter."
+        },
+        {
+          icon: Icons.Calendar,
+          color: "from-amber-500/10 to-orange-500/20 text-amber-600 border-amber-200",
+          title: "Missing Exciting Campus Events",
+          description: "College fests, hackathons, and guest seminars pass by unnoticed because event flyers are spread across 10 different fragmented platforms."
+        },
+        {
+          icon: Icons.Compass,
+          color: "from-indigo-500/10 to-blue-500/20 text-indigo-600 border-indigo-200",
+          title: "Difficulty Finding Clubs & Activities",
+          description: "Discovering active clubs, audition dates, and project teams feels like guesswork, leaving students disconnected from campus culture."
+        },
+        {
+          icon: Icons.ShoppingBag,
+          color: "from-purple-500/10 to-violet-500/20 text-purple-600 border-purple-200",
+          title: "Chaotic Buying, Selling & Lost Items",
+          description: "Desperate group texts to sell used textbooks or recover lost keys create inbox clutter with zero accountability or safe handoff."
+        },
+        {
+          icon: Icons.Users,
+          color: "from-cyan-500/10 to-sky-500/20 text-cyan-600 border-cyan-200",
+          title: "Roommate & Project Team Isolation",
+          description: "Scrambling last-minute to find compatible apartment roommates or skilled project partners without verified student criteria."
+        }
+      ];
+
+      return (
+        <section id="problem" className="py-20 md:py-28 bg-white border-y border-slate-200/70 relative">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            {/* Section Heading */}
+            <div className="text-center max-w-3xl mx-auto space-y-4">
+              <span className="text-xs font-bold uppercase tracking-wider text-rose-600 bg-rose-50 border border-rose-200/80 px-3 py-1 rounded-full">
+                The Reality Today
+              </span>
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight">
+                College Life Shouldn’t Be This Scattered.
+              </h2>
+              <p className="text-base sm:text-lg text-slate-600 leading-relaxed">
+                Students currently rely on dozens of unofficial WhatsApp groups, disorganized chat threads, and physical notice boards. This creates endless noise, wasted time, and lost opportunities.
+              </p>
+            </div>
+
+            {/* Problem Cards Grid */}
+            <div className="mt-14 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {problems.map((prob, idx) => {
+                const IconComponent = prob.icon;
+                return (
+                  <div
+                    key={idx}
+                    className="p-7 rounded-2xl bg-slate-50/70 border border-slate-200/90 hover:bg-white hover:border-slate-300 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 relative group"
+                  >
+                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center border mb-5 transition-transform group-hover:scale-110 ${prob.color}`}>
+                      <IconComponent className="w-6 h-6" />
+                    </div>
+                    <h3 className="text-lg font-bold text-slate-900 mb-2.5">
+                      {prob.title}
+                    </h3>
+                    <p className="text-sm text-slate-600 leading-relaxed">
+                      {prob.description}
+                    </p>
+                  </div>
+                );
+              })}
+
+              {/* Summary Problem Comparison Card */}
+              <div className="p-7 rounded-2xl bg-gradient-to-br from-navy-900 to-slate-900 text-white flex flex-col justify-between border border-slate-800 shadow-xl md:col-span-2 lg:col-span-1">
+                <div>
+                  <div className="inline-flex items-center space-x-1.5 text-xs font-bold text-rose-400 bg-rose-950/60 border border-rose-800/80 px-2.5 py-1 rounded-md mb-4">
+                    <span>The Status Quo</span>
+                  </div>
+                  <h3 className="text-xl font-bold mb-3">
+                    Overwhelmed by App-Switching?
+                  </h3>
+                  <p className="text-sm text-slate-300 leading-relaxed">
+                    The average college student manages 6+ distinct apps and 20+ group chats just to stay updated. CampusConnect consolidates the entire campus ecosystem into a single unified stream.
+                  </p>
+                </div>
+                <div className="mt-6 pt-4 border-t border-slate-800 flex items-center justify-between text-xs font-semibold text-brand-300">
+                  <span>There is a better way</span>
+                  <a href="#features" className="flex items-center space-x-1 hover:text-white transition-colors">
+                    <span>See the solution</span>
+                    <Icons.ArrowRight className="w-4 h-4" />
+                  </a>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </section>
+      );
+    };
+
+    // --- SECTION 3: OUR SOLUTION – CAMPUSCONNECT (5 CORE FEATURES) ---
+    const FeaturesSection = ({ onSelectFeatureDetail }) => {
+      const [activeDemo, setActiveDemo] = useState(0);
+
+      const features = [
+        {
+          id: "buy-sell",
+          title: "Buy & Sell",
+          subtitle: "Student Marketplace",
+          icon: Icons.ShoppingBag,
+          color: "from-blue-600 to-indigo-600",
+          tagColor: "bg-blue-50 text-blue-700 border-blue-200",
+          description: "A student marketplace to buy and sell used books, gadgets, accessories and other products safely within your verified college campus.",
+          highlights: [
+            "Verified peer-to-peer student transactions",
+            "Zero platform commission & zero shipping fees",
+            "Safe campus pick-up zones (libraries, dorm lobbies)",
+            "Instant chat with buyers & sellers"
+          ],
+          mockData: {
+            title: "Campus Marketplace Feed",
+            items: [
+              { name: "iPad 10th Gen (64GB Blue)", price: "$290", loc: "Engineering Quad", badge: "Verified Student" },
+              { name: "Organic Chemistry 4th Ed + Notes", price: "$35", loc: "North Dorm Hall", badge: "Great Condition" },
+              { name: "Mini Fridge (Dorm approved)", price: "$50", loc: "Tower 2 Handoff", badge: "Must Go Today" }
+            ]
+          }
+        },
+        {
+          id: "lost-found",
+          title: "Lost & Found",
+          subtitle: "Campus Recovery Hub",
+          icon: Icons.SearchAlert,
+          color: "from-amber-500 to-rose-600",
+          tagColor: "bg-amber-50 text-amber-700 border-amber-200",
+          description: "Report lost belongings and help students reconnect with their missing items swiftly through photo verification and geo-tagged campus spots.",
+          highlights: [
+            "Pin exact building, floor and lecture room",
+            "Photo matching & secure ownership verification",
+            "Automated alert to students in surrounding dorms",
+            "Official campus security & reception desk sync"
+          ],
+          mockData: {
+            title: "Live Campus Lost & Found Bulletin",
+            items: [
+              { name: "Blue HydroFlask with CS stickers", price: "FOUND", loc: "Main Library 2nd Fl", badge: "At Front Desk" },
+              { name: "Car Key Fob with Red Lanyard", price: "LOST", loc: "Parking Lot C", badge: "Reward Offered" },
+              { name: "TI-84 Calculator (Engraved)", price: "CLAIMED", loc: "Hall B", badge: "Reconnected!" }
+            ]
+          }
+        },
+        {
+          id: "events",
+          title: "Events",
+          subtitle: "Unified Campus Calendar",
+          icon: Icons.Calendar,
+          color: "from-purple-600 to-accent-600",
+          tagColor: "bg-purple-50 text-purple-700 border-purple-200",
+          description: "Discover college events, activities, hackathons, seminars, and register for upcoming events with seamless 1-click RSVP passes.",
+          highlights: [
+            "Comprehensive timeline of academic & cultural events",
+            "Instant RSVP with QR ticket pass for entry",
+            "Sync events directly with Google & Apple calendars",
+            "Live reminder alerts before check-in time"
+          ],
+          mockData: {
+            title: "Campus Calendar & Fest Passes",
+            items: [
+              { name: "HackCampus 36-Hour Hackathon", price: "FREE", loc: "CS Building B", badge: "184 Going" },
+              { name: "Spring Career & Internship Fair", price: "RSVP REQ", loc: "Main Gymnasium", badge: "45 Companies" },
+              { name: "Acoustic Sunset Concert", price: "FREE", loc: "Quad Lawn", badge: "Student Band" }
+            ]
+          }
+        },
+        {
+          id: "clubs",
+          title: "Clubs",
+          subtitle: "Official Club Directory",
+          icon: Icons.Users,
+          color: "from-emerald-500 to-teal-600",
+          tagColor: "bg-emerald-50 text-emerald-700 border-emerald-200",
+          description: "Stay updated with club announcements, activities, recruitments, and workshop opportunities without needing 10 different WhatsApp groups.",
+          highlights: [
+            "Verified directory of all registered campus clubs",
+            "Recruitment deadlines, audition forms & interviews",
+            "Official announcement broadcasts (zero meme clutter)",
+            "Direct Q&A with club executives & presidents"
+          ],
+          mockData: {
+            title: "Campus Clubs & Chapters",
+            items: [
+              { name: "Google Developer Student Club", price: "JOIN", loc: "Tech & Coding", badge: "Recruitment Open" },
+              { name: "Debate & Model UN Society", price: "FOLLOW", loc: "Literary & Policy", badge: "Next Meet: Thu" },
+              { name: "Solar Car Racing Team", price: "JOIN", loc: "Engineering Core", badge: "CAD Designers" }
+            ]
+          }
+        },
+        {
+          id: "roommates",
+          title: "Roommate & Groupmate Finder",
+          subtitle: "Smart Compatibility Match",
+          icon: Icons.UserPlus,
+          color: "from-blue-500 to-violet-600",
+          tagColor: "bg-indigo-50 text-indigo-700 border-indigo-200",
+          description: "Find suitable roommates based on living habits, and connect with students for course projects, assignments, hackathons and teamwork.",
+          highlights: [
+            "Filter roommates by sleep schedule, cleanliness & study habits",
+            "Find project partners by major, skills, and course code",
+            "Built-in verified student profile badges",
+            "Private direct messaging before committing"
+          ],
+          mockData: {
+            title: "Verified Student Matching Pool",
+            items: [
+              { name: "Flatmate for 2-Bed off campus", price: "ROOMMATE", loc: "Clean, Quiet, CS Jr", badge: "96% Match" },
+              { name: "Full-Stack Dev for Senior Capstone", price: "PROJECT", loc: "React & Python", badge: "Course CS 490" },
+              { name: "Hackathon Teammate (UI/UX Designer)", price: "HACKATHON", loc: "Figma & Tailwind", badge: "Design Lead" }
+            ]
+          }
+        }
+      ];
+
+      const currentFeature = features[activeDemo];
+
+      return (
+        <section id="features" className="py-20 md:py-28 bg-slate-50 relative overflow-hidden">
+          {/* Subtle Background Pattern */}
+          <div className="absolute inset-0 opacity-40 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none"></div>
+
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            
+            {/* Section Heading */}
+            <div className="text-center max-w-3xl mx-auto space-y-4">
+              <span className="text-xs font-bold uppercase tracking-wider text-brand-700 bg-brand-50 border border-brand-200/80 px-3.5 py-1 rounded-full">
+                Core Architecture
+              </span>
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight">
+                One Platform. Endless Campus Possibilities.
+              </h2>
+              <p className="text-base sm:text-lg text-slate-600 leading-relaxed">
+                Everything essential to collegiate life architected into five dedicated, beautifully unified modules.
+              </p>
+            </div>
+
+            {/* Feature Cards Grid (The 5 Core Features) */}
+            <div className="mt-14 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {features.map((feat, idx) => {
+                const IconComp = feat.icon;
+                const isSelected = activeDemo === idx;
+                return (
+                  <div
+                    key={feat.id}
+                    onClick={() => setActiveDemo(idx)}
+                    className={`p-7 rounded-2xl cursor-pointer transition-all duration-300 relative group flex flex-col justify-between ${
+                      isSelected 
+                        ? 'bg-white shadow-xl shadow-brand-500/10 border-2 border-brand-500 scale-[1.02]' 
+                        : 'bg-white/90 hover:bg-white border border-slate-200/90 hover:border-brand-200 hover:shadow-md'
+                    }`}
+                  >
+                    <div>
+                      {/* Top Header of Card */}
+                      <div className="flex items-center justify-between mb-5">
+                        <div className={`w-12 h-12 rounded-xl bg-gradient-to-tr ${feat.color} text-white flex items-center justify-center shadow-md group-hover:scale-105 transition-transform`}>
+                          <IconComp className="w-6 h-6" />
+                        </div>
+                        <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full border ${feat.tagColor}`}>
+                          {feat.subtitle}
+                        </span>
+                      </div>
+
+                      <h3 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-brand-600 transition-colors">
+                        {feat.title}
+                      </h3>
+
+                      <p className="text-sm text-slate-600 leading-relaxed mb-5">
+                        {feat.description}
+                      </p>
+
+                      {/* Bullet Highlights */}
+                      <ul className="space-y-2 mb-6">
+                        {feat.highlights.slice(0, 3).map((item, hIdx) => (
+                          <li key={hIdx} className="text-xs text-slate-600 flex items-start space-x-2">
+                            <Icons.Check className="w-4 h-4 text-brand-600 shrink-0 mt-0.5" />
+                            <span>{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
+                      <span className="text-xs font-bold text-brand-600 flex items-center space-x-1 group-hover:translate-x-1 transition-transform">
+                        <span>{isSelected ? "Previewing Below" : "Click to Preview"}</span>
+                        <Icons.ArrowRight className="w-3.5 h-3.5" />
+                      </span>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onSelectFeatureDetail(feat);
+                        }}
+                        className="text-xs font-semibold text-slate-500 hover:text-slate-800 underline underline-offset-2"
+                      >
+                        Deep Dive
+                      </button>
+                    </div>
+
+                  </div>
+                );
+              })}
+
+              {/* Integrated 6th Card: All-In-One Unified Sync */}
+              <div className="p-7 rounded-2xl bg-gradient-to-br from-brand-900 via-navy-900 to-accent-950 text-white flex flex-col justify-between border border-brand-800 shadow-xl relative overflow-hidden">
+                <div className="relative z-10">
+                  <div className="w-12 h-12 rounded-xl bg-white/10 backdrop-blur-md text-brand-300 flex items-center justify-center mb-5 border border-white/10">
+                    <Icons.Sparkles className="w-6 h-6 text-brand-300" />
+                  </div>
+                  <span className="text-[11px] uppercase tracking-wider font-bold text-brand-300 bg-brand-950/80 px-2.5 py-1 rounded-md border border-brand-700/60 inline-block mb-3">
+                    Unified Experience
+                  </span>
+                  <h3 className="text-xl font-bold mb-2">
+                    Cross-Module Intelligence
+                  </h3>
+                  <p className="text-sm text-slate-300 leading-relaxed">
+                    All five features share your single verified campus identity. When a club hosts an event, it automatically shows in your calendar, and finding a project partner links to their club achievements.
+                  </p>
+                </div>
+                <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-xs font-semibold text-brand-300">
+                  <span>Seamless student graph</span>
+                  <span className="text-white">100% Student-First</span>
+                </div>
+              </div>
+
+            </div>
+
+            {/* Interactive Live Prototype Preview Box */}
+            <div className="mt-14 bg-white rounded-3xl border border-slate-200/90 shadow-xl overflow-hidden">
+              <div className="bg-slate-900 px-6 py-4 flex flex-wrap items-center justify-between gap-4 border-b border-slate-800">
+                <div className="flex items-center space-x-3">
+                  <div className="flex space-x-1.5">
+                    <div className="w-3 h-3 rounded-full bg-rose-500"></div>
+                    <div className="w-3 h-3 rounded-full bg-amber-500"></div>
+                    <div className="w-3 h-3 rounded-full bg-emerald-500"></div>
+                  </div>
+                  <span className="text-xs font-mono text-slate-400 pl-2">
+                    prototype.campusconnect.app/{currentFeature.id}
+                  </span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <span className="text-xs font-semibold text-slate-300">Switch Module:</span>
+                  <div className="flex space-x-1">
+                    {features.map((f, i) => (
+                      <button
+                        key={f.id}
+                        onClick={() => setActiveDemo(i)}
+                        className={`text-xs px-2.5 py-1 rounded-md font-medium transition-colors ${
+                          activeDemo === i
+                            ? 'bg-brand-600 text-white font-bold'
+                            : 'bg-slate-800 text-slate-400 hover:text-white'
+                        }`}
+                      >
+                        {f.title.split(' ')[0]}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Module Interactive Showcase UI */}
+              <div className="p-6 sm:p-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-slate-50/50">
+                
+                {/* Left Description of Active Feature */}
+                <div className="lg:col-span-5 space-y-4">
+                  <div className="inline-flex items-center space-x-2 text-xs font-bold px-3 py-1 rounded-full bg-brand-50 text-brand-700 border border-brand-200">
+                    <Icons.Sparkles className="w-3.5 h-3.5" />
+                    <span>Interactive Preview: {currentFeature.title}</span>
+                  </div>
+                  <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
+                    {currentFeature.title} – {currentFeature.subtitle}
+                  </h3>
+                  <p className="text-sm text-slate-600 leading-relaxed">
+                    {currentFeature.description}
+                  </p>
+
+                  <div className="space-y-2.5 pt-2">
+                    {currentFeature.highlights.map((h, i) => (
+                      <div key={i} className="flex items-start space-x-2.5">
+                        <div className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 mt-0.5">
+                          <Icons.Check className="w-3 h-3" />
+                        </div>
+                        <span className="text-xs font-medium text-slate-700">{h}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="pt-3">
+                    <button
+                      onClick={() => onSelectFeatureDetail(currentFeature)}
+                      className="px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition-all flex items-center space-x-2"
+                    >
+                      <span>Explore {currentFeature.title} Specs</span>
+                      <Icons.ArrowRight className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Right Interactive Mock Cards List */}
+                <div className="lg:col-span-7 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+                  <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+                    <span className="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center space-x-2">
+                      <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+                      <span>{currentFeature.mockData.title}</span>
+                    </span>
+                    <span className="text-xs font-medium text-slate-400">Live Campus Feed</span>
+                  </div>
+
+                  {currentFeature.mockData.items.map((item, mIdx) => (
+                    <div
+                      key={mIdx}
+                      className="p-3.5 rounded-xl bg-slate-50 hover:bg-brand-50/40 border border-slate-200/80 hover:border-brand-300 transition-all flex items-center justify-between"
+                    >
+                      <div className="space-y-1">
+                        <div className="flex items-center space-x-2">
+                          <h4 className="text-sm font-bold text-slate-900">{item.name}</h4>
+                          <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-200 text-slate-700">
+                            {item.badge}
+                          </span>
+                        </div>
+                        <p className="text-xs text-slate-500 flex items-center space-x-1">
+                          <Icons.MapPin className="w-3.5 h-3.5 text-slate-400" />
+                          <span>{item.loc}</span>
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <span className="text-xs font-extrabold text-brand-700 bg-brand-100/80 px-2.5 py-1 rounded-lg">
+                          {item.price}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+
+                  <div className="pt-2 text-center">
+                    <span className="text-[11px] text-slate-400 font-medium">
+                      Simulated preview based on early prototype wireframes
+                    </span>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </section>
+      );
+    };
+
+    // --- SECTION 4: WHY CAMPUSCONNECT? ---
+    const WhyUsSection = () => {
+      const benefits = [
+        {
+          icon: Icons.Layers,
+          title: "All Campus Activities in One Place",
+          description: "No more searching 5 different chat apps. Find books, fests, announcements, and flatmates in one streamlined platform."
+        },
+        {
+          icon: Icons.Clock,
+          title: "Save Time & Avoid App Fatigue",
+          description: "Cut down hours spent scrolling fragmented WhatsApp threads. Get exactly what you need in seconds with dedicated filters."
+        },
+        {
+          icon: Icons.BellOff,
+          title: "Never Miss Announcements or Deadlines",
+          description: "Direct notifications for critical academic updates, club recruitments, and fest registrations before spots run out."
+        },
+        {
+          icon: Icons.Users,
+          title: "Connect & Collaborate with Fellow Students",
+          description: "Break out of isolated classroom bubbles. Connect with peers from different branches, years, and skill backgrounds effortlessly."
+        },
+        {
+          icon: Icons.ShieldCheck,
+          title: "A Simpler, More Organized College Experience",
+          description: "Enjoy college life with clarity. Less administrative hassle, more time for learning, networking, and making lifelong memories."
+        }
+      ];
+
+      return (
+        <section id="why-us" className="py-20 md:py-28 bg-white border-t border-slate-200/70 relative">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            {/* Section Heading */}
+            <div className="text-center max-w-3xl mx-auto space-y-4">
+              <span className="text-xs font-bold uppercase tracking-wider text-accent-700 bg-accent-50 border border-accent-200/80 px-3.5 py-1 rounded-full">
+                Value Proposition
+              </span>
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight">
+                Everything You Need, Nothing You Don't.
+              </h2>
+              <p className="text-base sm:text-lg text-slate-600 leading-relaxed">
+                CampusConnect is purpose-built to eliminate college noise and provide a purposeful student infrastructure.
+              </p>
+            </div>
+
+            {/* Benefits Grid */}
+            <div className="mt-14 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {benefits.map((b, idx) => {
+                const IconC = b.icon;
+                return (
+                  <div
+                    key={idx}
+                    className="p-7 rounded-2xl bg-slate-50/70 hover:bg-white border border-slate-200/80 hover:border-brand-200 transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
+                  >
+                    <div className="w-12 h-12 rounded-xl bg-brand-50 text-brand-600 border border-brand-100 flex items-center justify-center mb-5">
+                      <IconC className="w-6 h-6" />
+                    </div>
+                    <h3 className="text-lg font-bold text-slate-900 mb-2">
+                      {b.title}
+                    </h3>
+                    <p className="text-sm text-slate-600 leading-relaxed">
+                      {b.description}
+                    </p>
+                  </div>
+                );
+              })}
+
+              {/* Credibility & Privacy Statement Box */}
+              <div className="p-7 rounded-2xl bg-gradient-to-br from-brand-50 via-white to-purple-50 border border-brand-200/80 flex flex-col justify-between">
+                <div>
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-brand-700 bg-brand-100/80 px-2.5 py-0.5 rounded-full inline-block mb-3">
+                    Campus Trust Standard
+                  </span>
+                  <h3 className="text-lg font-bold text-slate-900 mb-2">
+                    Exclusively for College Students
+                  </h3>
+                  <p className="text-sm text-slate-600 leading-relaxed">
+                    Unlike public social networks, CampusConnect is strictly restricted to verified college students and registered university bodies.
+                  </p>
+                </div>
+                <div className="mt-4 pt-3 border-t border-brand-100 text-xs font-semibold text-brand-700 flex items-center space-x-1.5">
+                  <Icons.ShieldCheck className="w-4 h-4 text-emerald-600" />
+                  <span>Safe, spam-free student bubble</span>
+                </div>
+              </div>
+
+            </div>
+
+            {/* Comparison Matrix: CampusConnect vs Fragmented WhatsApp */}
+            <div className="mt-16 bg-slate-50 rounded-2xl border border-slate-200/90 p-6 sm:p-8">
+              <h3 className="text-lg sm:text-xl font-bold text-slate-900 text-center mb-6">
+                Why Students Prefer an All-in-One Platform
+              </h3>
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-sm">
+                  <thead>
+                    <tr className="border-b border-slate-200 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                      <th className="pb-3 px-4">Feature & Experience</th>
+                      <th className="pb-3 px-4 text-slate-400">Multiple WhatsApp Groups</th>
+                      <th className="pb-3 px-4 text-brand-700 font-extrabold">CampusConnect</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-200/70 text-slate-700 text-xs sm:text-sm">
+                    <tr>
+                      <td className="py-3 px-4 font-semibold text-slate-900">Important Notices</td>
+                      <td className="py-3 px-4 text-slate-500">Lost under spam & random chatter</td>
+                      <td className="py-3 px-4 font-bold text-brand-700">Dedicated pinned announcements</td>
+                    </tr>
+                    <tr>
+                      <td className="py-3 px-4 font-semibold text-slate-900">Event RSVP & Reminders</td>
+                      <td className="py-3 px-4 text-slate-500">Unorganized Google Forms & links</td>
+                      <td className="py-3 px-4 font-bold text-brand-700">1-Click RSVP with Calendar sync</td>
+                    </tr>
+                    <tr>
+                      <td className="py-3 px-4 font-semibold text-slate-900">Buy & Sell Safety</td>
+                      <td className="py-3 px-4 text-slate-500">Unverified buyers, chaotic chats</td>
+                      <td className="py-3 px-4 font-bold text-brand-700">Verified student profiles & handoff points</td>
+                    </tr>
+                    <tr>
+                      <td className="py-3 px-4 font-semibold text-slate-900">Finding Lost Items</td>
+                      <td className="py-3 px-4 text-slate-500">Broad spam to 500+ people</td>
+                      <td className="py-3 px-4 font-bold text-brand-700">Geo-tagged building & photo verification</td>
+                    </tr>
+                    <tr>
+                      <td className="py-3 px-4 font-semibold text-slate-900">Teammate & Roommate Matching</td>
+                      <td className="py-3 px-4 text-slate-500">Cold texting strangers</td>
+                      <td className="py-3 px-4 font-bold text-brand-700">Filter by skills, major & lifestyle habits</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+        </section>
+      );
+    };
+
+    // --- SECTION 5: HOW IT WORKS (3 SIMPLE STEPS) ---
+    const HowItWorksSection = ({ onOpenGetStarted }) => {
+      const steps = [
+        {
+          step: "01",
+          title: "Join CampusConnect",
+          description: "Sign up with your college email or choose your university campus to unlock your private, verified campus network.",
+          badge: "Quick 30s Signup"
+        },
+        {
+          step: "02",
+          title: "Explore Campus Services & Hubs",
+          description: "Browse upcoming college fests, official club recruitment announcements, student marketplace items, and roommate requests.",
+          badge: "Browse Everything"
+        },
+        {
+          step: "03",
+          title: "Connect, Participate & Thrive",
+          description: "RSVP to events, trade textbooks safely, team up for hackathons and projects, and make the absolute most of college life.",
+          badge: "Make Campus Memories"
+        }
+      ];
+
+      return (
+        <section id="how-it-works" className="py-20 md:py-28 bg-slate-50 border-t border-slate-200/80 relative">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            {/* Section Heading */}
+            <div className="text-center max-w-3xl mx-auto space-y-4">
+              <span className="text-xs font-bold uppercase tracking-wider text-brand-700 bg-brand-50 border border-brand-200/80 px-3.5 py-1 rounded-full">
+                Simple & Seamless
+              </span>
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight">
+                How It Works
+              </h2>
+              <p className="text-base sm:text-lg text-slate-600 leading-relaxed">
+                Getting started takes less than a minute. Three simple steps to a more connected university life.
+              </p>
+            </div>
+
+            {/* Steps Flow */}
+            <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 relative">
+              
+              {/* Connecting Desktop Line */}
+              <div className="hidden md:block absolute top-1/2 left-12 right-12 h-0.5 bg-gradient-to-r from-brand-300 via-accent-300 to-brand-300 -translate-y-12 z-0"></div>
+
+              {steps.map((st, idx) => (
+                <div
+                  key={idx}
+                  className="bg-white p-8 rounded-2xl border border-slate-200/90 shadow-sm relative z-10 flex flex-col justify-between hover:shadow-lg hover:-translate-y-1 transition-all"
+                >
+                  <div>
+                    <div className="flex items-center justify-between mb-6">
+                      <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-brand-600 to-accent-600 text-white font-black text-xl flex items-center justify-center shadow-lg shadow-brand-500/20">
+                        {st.step}
+                      </div>
+                      <span className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-slate-100 text-slate-700">
+                        {st.badge}
+                      </span>
+                    </div>
+
+                    <h3 className="text-xl font-bold text-slate-900 mb-3">
+                      {st.title}
+                    </h3>
+                    <p className="text-sm text-slate-600 leading-relaxed">
+                      {st.description}
+                    </p>
+                  </div>
+
+                  <div className="mt-6 pt-4 border-t border-slate-100 flex items-center text-xs font-bold text-brand-600">
+                    <span>Step {idx + 1} of 3</span>
+                  </div>
+                </div>
+              ))}
+
+            </div>
+
+            {/* Bottom Callout */}
+            <div className="mt-14 text-center">
+              <button
+                onClick={() => onOpenGetStarted('student')}
+                className="px-8 py-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm shadow-md transition-all inline-flex items-center space-x-2"
+              >
+                <span>Ready to experience CampusConnect?</span>
+                <Icons.ArrowRight className="w-4 h-4 text-brand-400" />
+              </button>
+            </div>
+
+          </div>
+        </section>
+      );
+    };
+
+    // --- SECTION 6: CALL TO ACTION (CTA) ---
+    const CTASection = ({ onOpenGetStarted }) => {
+      return (
+        <section className="py-20 md:py-28 dark-mesh-gradient text-white relative overflow-hidden">
+          {/* Subtle Ambient Shapes */}
+          <div className="absolute top-0 right-0 w-96 h-96 bg-brand-500/20 rounded-full blur-3xl pointer-events-none"></div>
+          <div className="absolute bottom-0 left-0 w-96 h-96 bg-accent-500/20 rounded-full blur-3xl pointer-events-none"></div>
+
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 space-y-6">
+            
+            <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-bold text-brand-300">
+              <Icons.Sparkles className="w-4 h-4 text-brand-300" />
+              <span>Campus Rollout Initiative</span>
+            </div>
+
+            <h2 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight">
+              Your Campus. Your Community. <br className="hidden sm:inline" />
+              <span className="bg-gradient-to-r from-blue-400 via-indigo-300 to-purple-400 bg-clip-text text-transparent">
+                Your Connection.
+              </span>
+            </h2>
+
+            <p className="text-lg sm:text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed font-normal">
+              Be part of a smarter, more connected campus experience.
+            </p>
+
+            {/* Prominent Action Button */}
+            <div className="pt-6 flex flex-col sm:flex-row items-center justify-center space-y-3 sm:space-y-0 sm:space-x-4">
+              <button
+                onClick={() => onOpenGetStarted('student')}
+                className="w-full sm:w-auto px-9 py-4 rounded-xl bg-white hover:bg-slate-100 text-slate-900 font-extrabold text-base shadow-2xl hover:shadow-white/20 transition-all transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center space-x-2"
+              >
+                <span>Get Started</span>
+                <Icons.ArrowRight className="w-5 h-5 text-brand-600" />
+              </button>
+
+              <button
+                onClick={() => onOpenGetStarted('university')}
+                className="w-full sm:w-auto px-7 py-4 rounded-xl bg-white/10 hover:bg-white/15 text-white font-bold text-base border border-white/20 backdrop-blur-sm transition-all"
+              >
+                <span>For Colleges & Club Leads</span>
+              </button>
+            </div>
+
+            <p className="text-xs text-slate-400 pt-4">
+              Early Prototype Preview • No credit card required • Student verified
+            </p>
+
+          </div>
+        </section>
+      );
+    };
+
+    // --- SECTION 7: FOOTER ---
+    const Footer = ({ onOpenContactModal, onTriggerToast }) => {
+      const emailPlaceholder = "[Your Email Address]";
+
+      const handleCopyEmail = (e) => {
+        e.preventDefault();
+        navigator.clipboard?.writeText(emailPlaceholder);
+        onTriggerToast("Email placeholder copied to clipboard!");
+      };
+
+      return (
+        <footer className="bg-navy-950 text-slate-400 pt-16 pb-12 border-t border-slate-800">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-slate-800">
+              
+              {/* Brand Column */}
+              <div className="lg:col-span-2 space-y-4">
+                <div className="flex items-center space-x-3">
+                  <Icons.Logo className="w-9 h-9" />
+                  <span className="text-2xl font-black text-white tracking-tight">
+                    Campus<span className="text-brand-400">Connect</span>
+                  </span>
+                </div>
+                <p className="text-sm text-slate-400 leading-relaxed max-w-sm">
+                  The all-in-one campus platform that brings essential student activities and services together in one place. Simple, organized, and genuinely connected.
+                </p>
+                <div className="pt-2 text-xs text-slate-500">
+                  <span className="inline-block px-2.5 py-1 rounded bg-slate-900 border border-slate-800 text-slate-400">
+                    Innovative Startup Prototype
+                  </span>
+                </div>
+              </div>
+
+              {/* Navigation Links Column */}
+              <div className="space-y-3">
+                <h4 className="text-sm font-bold text-white uppercase tracking-wider">Navigation</h4>
+                <ul className="space-y-2 text-sm">
+                  <li><a href="#hero" className="hover:text-white transition-colors">Home</a></li>
+                  <li><a href="#features" className="hover:text-white transition-colors">Features</a></li>
+                  <li><a href="#problem" className="hover:text-white transition-colors">The Problem</a></li>
+                  <li><a href="#why-us" className="hover:text-white transition-colors">Why CampusConnect</a></li>
+                  <li><a href="#how-it-works" className="hover:text-white transition-colors">How It Works</a></li>
+                </ul>
+              </div>
+
+              {/* Five Core Modules Links Column */}
+              <div className="space-y-3">
+                <h4 className="text-sm font-bold text-white uppercase tracking-wider">Core Modules</h4>
+                <ul className="space-y-2 text-sm">
+                  <li><a href="#features" className="hover:text-white transition-colors">Buy & Sell</a></li>
+                  <li><a href="#features" className="hover:text-white transition-colors">Lost & Found</a></li>
+                  <li><a href="#features" className="hover:text-white transition-colors">Events & RSVPs</a></li>
+                  <li><a href="#features" className="hover:text-white transition-colors">Clubs Directory</a></li>
+                  <li><a href="#features" className="hover:text-white transition-colors">Roommate & Teammate</a></li>
+                </ul>
+              </div>
+
+              {/* Contact & Socials Column */}
+              <div className="space-y-3">
+                <h4 className="text-sm font-bold text-white uppercase tracking-wider">Contact & Inquiries</h4>
+                <p className="text-xs text-slate-400">
+                  Interested in piloting CampusConnect at your college?
+                </p>
+                
+                {/* Contact Email Placeholder Box */}
+                <div className="p-3 rounded-xl bg-slate-900/90 border border-slate-800 space-y-1.5">
+                  <span className="text-[10px] uppercase font-bold text-slate-500 tracking-wider">Official Inquiries</span>
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-mono text-brand-300 font-bold select-all">
+                      {emailPlaceholder}
+                    </span>
+                    <button
+                      onClick={handleCopyEmail}
+                      title="Copy placeholder email"
+                      className="p-1 rounded hover:bg-slate-800 text-slate-400 hover:text-white transition-colors"
+                    >
+                      <Icons.Copy className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Social Media Links Placeholders */}
+                <div className="pt-2">
+                  <span className="text-[11px] text-slate-500 block mb-2">Connect with our team:</span>
+                  <div className="flex space-x-2">
+                    {[
+                      { name: 'X / Twitter', tag: '@CampusConnect' },
+                      { name: 'Instagram', tag: '@CampusConnectApp' },
+                      { name: 'LinkedIn', tag: 'CampusConnect-Startup' }
+                    ].map(s => (
+                      <button
+                        key={s.name}
+                        onClick={() => onTriggerToast(`Social placeholder for ${s.name} (${s.tag})`)}
+                        className="px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 text-xs text-slate-300 hover:text-white transition-colors"
+                      >
+                        {s.name}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+
+            {/* Copyright & Startup Disclaimer */}
+            <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 space-y-3 sm:space-y-0">
+              <p>
+                © 2026 CampusConnect. All Rights Reserved.
+              </p>
+              <div className="flex items-center space-x-4">
+                <span>Designed exclusively for college students</span>
+                <span>•</span>
+                <span>Innovative Startup Concept</span>
+              </div>
+            </div>
+
+          </div>
+        </footer>
+      );
+    };
+
+    // --- INTERACTIVE MODAL: "GET STARTED / EARLY ACCESS" ---
+    const GetStartedModal = ({ isOpen, onClose, defaultRole = 'student', onTriggerToast }) => {
+      const [role, setRole] = useState(defaultRole);
+      const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        college: '',
+        roleDetail: '',
+        interest: ['Events', 'Buy & Sell']
+      });
+      const [isSubmitted, setIsSubmitted] = useState(false);
+
+      useEffect(() => {
+        setRole(defaultRole);
+      }, [defaultRole]);
+
+      if (!isOpen) return null;
+
+      const handleInterestToggle = (item) => {
+        if (formData.interest.includes(item)) {
+          setFormData({ ...formData, interest: formData.interest.filter(i => i !== item) });
+        } else {
+          setFormData({ ...formData, interest: [...formData.interest, item] });
+        }
+      };
+
+      const handleSubmit = (e) => {
+        e.preventDefault();
+        if (!formData.name || !formData.email || !formData.college) {
+          alert('Please fill in your name, email, and university name.');
+          return;
+        }
+        setIsSubmitted(true);
+        onTriggerToast("🎉 Welcome to CampusConnect Early Access queue!");
+      };
+
+      return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/70 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-slate-200 relative max-h-[92vh] overflow-y-auto">
+            
+            <button
+              onClick={onClose}
+              className="absolute top-5 right-5 p-2 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+              aria-label="Close modal"
+            >
+              <Icons.Close className="w-5 h-5" />
+            </button>
+
+            {!isSubmitted ? (
+              <div>
+                <div className="flex items-center space-x-2 text-xs font-bold text-brand-600 uppercase tracking-wider mb-1">
+                  <Icons.Sparkles className="w-4 h-4" />
+                  <span>Early Prototype Access</span>
+                </div>
+                
+                <h3 className="text-2xl font-black text-slate-900">
+                  Be First on CampusConnect
+                </h3>
+                <p className="text-sm text-slate-600 mt-1 mb-6">
+                  Join our verified campus rollout waitlist or bring CampusConnect to your college campus.
+                </p>
+
+                {/* Role Toggle Selector */}
+                <div className="grid grid-cols-2 p-1 bg-slate-100 rounded-xl mb-5">
+                  <button
+                    type="button"
+                    onClick={() => setRole('student')}
+                    className={`py-2 text-xs font-bold rounded-lg transition-all ${
+                      role === 'student'
+                        ? 'bg-white text-brand-700 shadow-sm'
+                        : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                  >
+                    I'm a College Student
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setRole('university')}
+                    className={`py-2 text-xs font-bold rounded-lg transition-all ${
+                      role === 'university'
+                        ? 'bg-white text-accent-700 shadow-sm'
+                        : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                  >
+                    College / Club Lead
+                  </button>
+                </div>
+
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                      Full Name *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. Alex Morgan"
+                      value={formData.name}
+                      onChange={e => setFormData({ ...formData, name: e.target.value })}
+                      className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                      {role === 'student' ? 'College / Student Email *' : 'Official Academic Email *'}
+                    </label>
+                    <input
+                      type="email"
+                      required
+                      placeholder={role === 'student' ? 'yourname@college.edu' : 'lead@university.edu'}
+                      value={formData.email}
+                      onChange={e => setFormData({ ...formData, email: e.target.value })}
+                      className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                      College / University Name *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. Stanford University / Tech Institute"
+                      value={formData.college}
+                      onChange={e => setFormData({ ...formData, college: e.target.value })}
+                      className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                      What features are you most excited about?
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                      {['Buy & Sell', 'Lost & Found', 'Events & RSVPs', 'Clubs Directory', 'Roommate & Teammates'].map(item => (
+                        <button
+                          type="button"
+                          key={item}
+                          onClick={() => handleInterestToggle(item)}
+                          className={`text-xs px-3 py-1.5 rounded-lg border font-medium transition-colors ${
+                            formData.interest.includes(item)
+                              ? 'bg-brand-50 text-brand-700 border-brand-300 font-bold'
+                              : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
+                          }`}
+                        >
+                          {formData.interest.includes(item) && '✓ '}
+                          {item}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="pt-2">
+                    <button
+                      type="submit"
+                      className="w-full py-3.5 rounded-xl bg-gradient-to-r from-brand-600 to-accent-700 hover:from-brand-700 hover:to-accent-800 text-white font-bold text-sm shadow-lg shadow-brand-500/25 transition-all"
+                    >
+                      {role === 'student' ? 'Request Student Early Access' : 'Schedule Campus Demo'}
+                    </button>
+                  </div>
+                </form>
+
+                <p className="text-[11px] text-slate-400 text-center mt-4">
+                  We respect your privacy. No spam, ever.
+                </p>
+              </div>
+            ) : (
+              <div className="text-center py-6 space-y-4">
+                <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto">
+                  <Icons.Check className="w-8 h-8" />
+                </div>
+                <h3 className="text-2xl font-black text-slate-900">
+                  You’re on the Priority List!
+                </h3>
+                <p className="text-sm text-slate-600 max-w-sm mx-auto">
+                  Thank you, <strong>{formData.name}</strong>. We've reserved your prototype invitation for <strong>{formData.college}</strong>.
+                </p>
+
+                {/* Simulated Pass */}
+                <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 text-left space-y-2 mt-4 font-mono text-xs">
+                  <div className="flex justify-between text-slate-400">
+                    <span>PASS STATUS:</span>
+                    <span className="text-emerald-600 font-bold">CONFIRMED (VIP)</span>
+                  </div>
+                  <div className="flex justify-between text-slate-800">
+                    <span>EMAIL:</span>
+                    <span className="font-semibold">{formData.email}</span>
+                  </div>
+                  <div className="flex justify-between text-slate-800">
+                    <span>INSTITUTION:</span>
+                    <span className="font-semibold">{formData.college}</span>
+                  </div>
+                </div>
+
+                <div className="pt-4">
+                  <button
+                    onClick={onClose}
+                    className="w-full py-3 rounded-xl bg-slate-900 text-white text-xs font-bold hover:bg-slate-800 transition-colors"
+                  >
+                    Return to CampusConnect
+                  </button>
+                </div>
+              </div>
+            )}
+
+          </div>
+        </div>
+      );
+    };
+
+    // --- INTERACTIVE FEATURE DEEP-DIVE MODAL ---
+    const FeatureDetailModal = ({ feature, onClose, onOpenGetStarted }) => {
+      if (!feature) return null;
+      const IconC = feature.icon;
+
+      return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/70 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl max-w-xl w-full p-6 sm:p-8 shadow-2xl border border-slate-200 relative max-h-[92vh] overflow-y-auto">
+            
+            <button
+              onClick={onClose}
+              className="absolute top-5 right-5 p-2 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+              aria-label="Close modal"
+            >
+              <Icons.Close className="w-5 h-5" />
+            </button>
+
+            <div className="flex items-center space-x-3 mb-4">
+              <div className={`w-12 h-12 rounded-xl bg-gradient-to-tr ${feature.color} text-white flex items-center justify-center shadow-md`}>
+                <IconC className="w-6 h-6" />
+              </div>
+              <div>
+                <span className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full border ${feature.tagColor}`}>
+                  {feature.subtitle}
+                </span>
+                <h3 className="text-2xl font-black text-slate-900">{feature.title}</h3>
+              </div>
+            </div>
+
+            <p className="text-sm text-slate-600 leading-relaxed mb-6">
+              {feature.description}
+            </p>
+
+            <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider mb-3">
+              Key Capabilities Designed For Students:
+            </h4>
+            <ul className="space-y-2.5 mb-8">
+              {feature.highlights.map((h, i) => (
+                <li key={i} className="text-xs text-slate-700 flex items-start space-x-2.5 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+                  <Icons.Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                  <span className="font-medium">{h}</span>
+                </li>
+              ))}
+            </ul>
+
+            <div className="pt-2 flex space-x-3">
+              <button
+                onClick={() => {
+                  onClose();
+                  onOpenGetStarted('student');
+                }}
+                className="flex-1 py-3 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold transition-all shadow-md"
+              >
+                Get Started with {feature.title}
+              </button>
+              <button
+                onClick={onClose}
+                className="px-5 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-all"
+              >
+                Close
+              </button>
+            </div>
+
+          </div>
+        </div>
+      );
+    };
+
+    // --- MAIN APP CONTROLLER ---
+    function App() {
+      const [getStartedModalOpen, setGetStartedModalOpen] = useState(false);
+      const [getStartedDefaultRole, setGetStartedDefaultRole] = useState('student');
+      const [selectedFeatureDetail, setSelectedFeatureDetail] = useState(null);
+      const [toastMessage, setToastMessage] = useState(null);
+
+      const triggerToast = (msg) => {
+        setToastMessage(msg);
+      };
+
+      const handleOpenGetStarted = (role = 'student') => {
+        setGetStartedDefaultRole(role);
+        setGetStartedModalOpen(true);
+      };
+
+      return (
+        <div className="min-h-screen flex flex-col font-sans">
+          {/* Navigation Bar */}
+          <Navbar 
+            onOpenGetStarted={handleOpenGetStarted} 
+          />
+
+          {/* Main Landing Page Content */}
+          <main className="flex-grow">
+            {/* Section 1: Hero */}
+            <HeroSection 
+              onOpenGetStarted={handleOpenGetStarted}
+              onOpenFeaturePreview={() => {}}
+            />
+
+            {/* Section 2: The Problem */}
+            <ProblemSection />
+
+            {/* Section 3: Our Solution (5 Core Features) */}
+            <FeaturesSection 
+              onSelectFeatureDetail={(feat) => setSelectedFeatureDetail(feat)}
+            />
+
+            {/* Section 4: Why CampusConnect? */}
+            <WhyUsSection />
+
+            {/* Section 5: How It Works */}
+            <HowItWorksSection 
+              onOpenGetStarted={handleOpenGetStarted}
+            />
+
+            {/* Section 6: Call To Action */}
+            <CTASection 
+              onOpenGetStarted={handleOpenGetStarted}
+            />
+          </main>
+
+          {/* Section 7: Footer */}
+          <Footer 
+            onTriggerToast={triggerToast}
+          />
+
+          {/* Modals */}
+          <GetStartedModal 
+            isOpen={getStartedModalOpen}
+            onClose={() => setGetStartedModalOpen(false)}
+            defaultRole={getStartedDefaultRole}
+            onTriggerToast={triggerToast}
+          />
+
+          <FeatureDetailModal 
+            feature={selectedFeatureDetail}
+            onClose={() => setSelectedFeatureDetail(null)}
+            onOpenGetStarted={handleOpenGetStarted}
+          />
+
+          {/* Toast Notification */}
+          {toastMessage && (
+            <Toast 
+              message={toastMessage} 
+              onClose={() => setToastMessage(null)} 
+            />
+          )}
+
+          {/* Floating Back-To-Top Pill */}
+          <a
+            href="#hero"
+            aria-label="Back to top"
+            className="fixed bottom-6 left-6 z-30 p-3 rounded-full bg-white/90 hover:bg-white text-slate-700 shadow-lg border border-slate-200 transition-all hover:scale-110 active:scale-95 hidden sm:flex items-center justify-center"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+            </svg>
+          </a>
+        </div>
+      );
+    }
+
+    // Mount React App
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>
